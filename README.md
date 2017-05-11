@@ -2,6 +2,8 @@
 
 To use, simply import/execfile (or just %run in IPython) the file.
 
+Requires numpy, scipy, fastlmm.
+
 You construct an object which does all the required preprocessing, and can then use it to test multiple phenotypes.
 
 All matrices should have the same number of rows (sample size).
