@@ -9,7 +9,6 @@ import scipy.linalg
 import fastlmm.association.tests
 
 class SKAT_Base(object):
-<<<<<<< HEAD
 	def process_covariates(self, fixed_covariates=None, add_intercept=True):
 		"""
 		DOCS HERE
