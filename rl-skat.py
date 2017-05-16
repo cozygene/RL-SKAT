@@ -43,6 +43,7 @@ class SKAT_Base(object):
         """
         DOCS HERE
         """
+        assert not any(isnan(phenotypes)), "Nan not allowed in phenotypes"
 
         # Calculate the scores
         if print_time:
