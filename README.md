@@ -47,3 +47,4 @@ Where:
 * `phenotypes` - A matrix of *n by N* of *N* phenotypes to test.
 
 The method returns *N* p-values.
+
