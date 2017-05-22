@@ -12,9 +12,6 @@ from timeit import default_timer as timer
 
 class SKAT_Base(object):
     def process_covariates(self, fixed_covariates=None, add_intercept=True):
-        """
-        DOCS HERE
-        """
         self.X = fixed_covariates
 
         if add_intercept:
@@ -40,9 +37,6 @@ class SKAT_Base(object):
         raise NotImplementedError
 
     def test(self, phenotypes, return_scores=False, slow=False, print_time=False):
-        """
-        DOCS HERE
-        """
         assert not any(isnan(phenotypes)), "Nan not allowed in phenotypes"
 
         # Calculate the scores
@@ -75,9 +69,6 @@ class SKAT_Base(object):
 
 class SKAT_Low_Rank_Base(SKAT_Base):
     def __init__(self, weighted_Z=None, fixed_covariates=None, add_intercept=True, zero_threshold=10e-5, phis=None):        
-        """
-        DOCS HERE
-        """
         self.Z = weighted_Z
         self.n, self.m = shape(self.Z)
 
@@ -115,9 +106,6 @@ class SKAT_Low_Rank_Base(SKAT_Base):
     
     
     def compute_scores(self, phenotypes):
-        """
-        DOCS HERE
-        """
         assert shape(phenotypes)[0] == self.n
 
         if self.X is not None:
@@ -154,9 +142,6 @@ class RL_SKAT_Low_Rank_Chen(SKAT_Low_Rank_Base):
 
 class SKAT_Full_Kernel_Base(SKAT_Base):
     def __init__(self, kernel_matrix=None, fixed_covariates=None, add_intercept=True, zero_threshold=10e-5, phis=None):
-        """
-        DOCS HERE
-        """
         self.K = kernel_matrix
         self.n = len(self.K)
         assert shape(self.K) == (self.n, self.n)
@@ -195,9 +180,6 @@ class SKAT_Full_Kernel_Base(SKAT_Base):
         
 
     def compute_scores(self, phenotypes):
-        """
-        DOCS HERE
-        """
         assert shape(phenotypes)[0] == self.n
 
         nominators = sum(dot(self.SKS, phenotypes) * phenotypes, axis=0)
