@@ -36,8 +36,11 @@ class SKAT_Base(object):
     def compute_p_value(self, r):
         raise NotImplementedError
 
-    def test(self, phenotypes, return_scores=False, slow=False, print_time=False):
+    def test(self, phenotypes, return_scores=False, print_time=False):
         assert not any(isnan(phenotypes)), "Nan not allowed in phenotypes"
+
+        if len(shape(phenotypes)) == 1:
+            phenotypes = array(phenotypes)[:, newaxis]
 
         # Calculate the scores
         if print_time:
