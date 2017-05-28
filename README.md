@@ -6,6 +6,11 @@ Code written by Regev Schweiger. For questions or comments, mail [schweiger@post
 
 ### Installation
 
+You can simply download the code:
+
+1. Download the ZIP file of the latest release here: [https://github.com/cozygene/RL-SKAT/releases](https://github.com/cozygene/RL-SKAT/releases).
+2. Extract the ZIP file to a folder
+
 RL-SKAT is implemented as a set of Python classes. To use, simply import/execfile (or just %run in IPython) the file, e.g.:
 ```python
 from rl_skat import *
