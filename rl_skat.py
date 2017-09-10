@@ -5,8 +5,11 @@
 from numpy import *
 import numpy.linalg
 import scipy.linalg
+import warnings
 
-import fastlmm.association.tests
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    import fastlmm.association.tests
 
 from timeit import default_timer as timer
 
