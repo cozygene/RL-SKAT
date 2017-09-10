@@ -22,6 +22,8 @@ RL-SKAT requires [NumPy](http://www.numpy.org/), [SciPy](http://www.scipy.org) a
 
 An object is constructed which does all the required preprocessing, and can then use it to test multiple phenotypes. All matrices should have the same number of rows (*n*, the sample size).
 
+The file `example.py` contains a short example (for the heritability use-case), along with example files.
+
 ## Full kernel
 
 When you have a kernel matrix already computed, use this version:
