@@ -1,6 +1,6 @@
 # RL-SKAT
 
-RL-SKAT is a method for the calculation of exact p-values for the score test in heritability, in the case of a single kernel and a continuous phenotype. RL-SKAT is described in the following [paper](http://biorxiv.org/content/early/2017/06/11/140889).
+RL-SKAT is a method for the calculation of exact p-values for the score test in heritability, in the case of a single kernel and a continuous phenotype. RL-SKAT is described in the following [paper](http://www.genetics.org/content/early/2017/10/12/genetics.117.300395).
 
 Code written by Regev Schweiger. For questions or comments, mail [schweiger@post.tau.ac.il](mailto:schweiger@post.tau.ac.il).
 
