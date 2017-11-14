@@ -9,7 +9,7 @@ import warnings
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
-    import fastlmm.association.tests
+    import fastlmm.util.stats.quadform as qf
 
 from timeit import default_timer as timer
 
@@ -36,10 +36,13 @@ class SKAT_Base(object):
     def compute_scores(self, phenotypes):
         raise NotImplementedError
 
-    def compute_p_value(self, r):
+    def compute_p_value(self, r, acc):
         raise NotImplementedError
 
-    def test(self, phenotypes, return_scores=False, print_time=False):
+    def davies(self, squaredform, eigvals, acc):
+        return qf.qf(squaredform, eigvals, acc=acc)[0]
+
+    def test(self, phenotypes, return_scores=False, print_time=False, acc=1e-7):
         assert not any(isnan(phenotypes)), "Nan not allowed in phenotypes"
 
         if len(shape(phenotypes)) == 1:
@@ -60,7 +63,7 @@ class SKAT_Base(object):
 
         pvals = zeros_like(scores)
         for i, r in enumerate(scores):
-            pvals[i] = self.compute_p_value(r)
+            pvals[i] = self.compute_p_value(r, acc)
 
         if print_time:
             print "Computing p-values:", timer() - start
@@ -127,13 +130,13 @@ class SKAT_Low_Rank_Base(SKAT_Base):
 
 
 class RL_SKAT_Low_Rank(SKAT_Low_Rank_Base):
-    def compute_p_value(self, r):
+    def compute_p_value(self, r, acc):
         alphars = concatenate([self.phis[:self.k] - float(r) / (self.n - self.p), ones(self.q) * -float(r) / (self.n - self.p)])
-        return fastlmm.association.tests.Sc.pv_davies_eig(0, alphars)
+        return self.davies(0, alphars, acc)
 
 # The slow formulation
 class RL_SKAT_Low_Rank_Chen(SKAT_Low_Rank_Base):
-    def compute_p_value(self, r):
+    def compute_p_value(self, r, acc):
         I = identity(self.n)
         if self.X is not None:
             mat = dot(self.SZ, self.SZ.T) - float(r) / (self.n - self.p) * (I - dot(self.X, self.Xdagger))
@@ -143,7 +146,7 @@ class RL_SKAT_Low_Rank_Chen(SKAT_Low_Rank_Base):
         alphars = numpy.linalg.eigvalsh(mat)
         alphars = array(sort(alphars)[::-1])
 
-        return fastlmm.association.tests.Sc.pv_davies_eig(0, alphars)
+        return self.davies(0, alphars, acc)
 
 
 class SKAT_Full_Kernel_Base(SKAT_Base):
@@ -197,21 +200,21 @@ class SKAT_Full_Kernel_Base(SKAT_Base):
         return nominators / denonimators * (self.n - self.p)
 
 class SKAT_Inexact_Full_Kernel(SKAT_Full_Kernel_Base):
-    def compute_p_value(self, r):
+    def compute_p_value(self, r, acc):
         # important to drop the very small ones because otherwise it is stuck
-        return fastlmm.association.tests.Sc.pv_davies_eig(r, self.phis[where(self.phis > 1e-10)])
+        return self.davies(r, self.phis[where(self.phis > 1e-10)], acc)
 
 
 class RL_SKAT_Full_Kernel(SKAT_Full_Kernel_Base):
     # Override with correction
-    def compute_p_value(self, r):
+    def compute_p_value(self, r, acc):
         alphars = concatenate([self.phis[:self.k] - float(r) / (self.n - self.p), ones(self.q) * -float(r) / (self.n - self.p)])
-        return fastlmm.association.tests.Sc.pv_davies_eig(0, alphars)
+        return self.davies(0, alphars, acc)
 
 
 # Exact but  slow formulation
 class RL_SKAT_Full_Kernel_Chen(SKAT_Full_Kernel_Base):
-    def compute_p_value(self, r):
+    def compute_p_value(self, r, acc):
         I = identity(self.n)
         if self.X is not None:
             mat = self.SKS - float(r) / (self.n - self.p) * (I - dot(self.X, self.Xdagger))
@@ -221,5 +224,5 @@ class RL_SKAT_Full_Kernel_Chen(SKAT_Full_Kernel_Base):
         alphars = numpy.linalg.eigvalsh(mat)
         alphars = array(sort(alphars)[::-1])
 
-        return fastlmm.association.tests.Sc.pv_davies_eig(0, alphars)
+        return self.davies(0, alphars, acc)
 
